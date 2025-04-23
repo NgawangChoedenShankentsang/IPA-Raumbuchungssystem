@@ -10,6 +10,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\IconSet;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AdminDashboard(routePath: '/', routeName: 'admin')]
@@ -39,6 +41,12 @@ class DashboardController extends AbstractDashboardController
         //
         return $this->render('@EasyAdmin/page/content.html.twig');
     }
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+            ->useCustomIconSet('tabler')
+        ;
+    }
 
     public function configureDashboard(): Dashboard
     {
@@ -48,11 +56,11 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Reserve', 'fas fa-calendar',TelefonBox::class);
-        yield MenuItem::linkToCrud('User', 'fas fa-user', User::class);
-        yield MenuItem::linkToCrud('Company', 'fas fa-building', Company::class);
-        yield MenuItem::linkToCrud('Status', 'fas fa-flag', Status::class);
+        yield MenuItem::linkToDashboard('Dashboard', 'home');
+        yield MenuItem::linkToCrud('Reserve', 'calendar-plus',TelefonBox::class);
+        yield MenuItem::linkToCrud('User', 'users', User::class);
+        yield MenuItem::linkToCrud('Company', 'buildings', Company::class);
+        yield MenuItem::linkToCrud('Status', 'flag', Status::class);
         
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
