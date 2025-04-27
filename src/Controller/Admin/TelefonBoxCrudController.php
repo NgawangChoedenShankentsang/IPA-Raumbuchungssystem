@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\TelefonBox;
 use App\Entity\Status;
+use App\Service\TelefonBoxNotificationService;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -13,14 +15,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use Doctrine\ORM\EntityManagerInterface;
 
 class TelefonBoxCrudController extends AbstractCrudController
 {
-    public function __construct(EntityManagerInterface $entityManager)
+    private EntityManagerInterface $entityManager;
+    private TelefonBoxNotificationService $notificationService;
+    public function __construct(EntityManagerInterface $entityManager, TelefonBoxNotificationService $notificationService)
     {
         $this->entityManager = $entityManager;
+        $this->notificationService = $notificationService;
     }
+
     public static function getEntityFqcn(): string
     {
         return TelefonBox::class;
@@ -67,4 +72,18 @@ class TelefonBoxCrudController extends AbstractCrudController
 
         return $telefonBox;
     }
+
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof TelefonBox) {
+            return;
+        }
+
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
+
+        $this->notificationService->notifyAdmins($entityInstance);
+    }
+
+
 }
