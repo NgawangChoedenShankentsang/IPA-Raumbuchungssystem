@@ -34,7 +34,8 @@ class ReserveCrudController extends AbstractCrudController
     {
         return $crud
             ->setPageTitle(Crud::PAGE_INDEX, 'Reserve')
-            ->setPageTitle(Crud::PAGE_EDIT, 'Edit Reserve');
+            ->setPageTitle(Crud::PAGE_EDIT, 'Edit Reserve')
+            ->setPageTitle(Crud::PAGE_NEW, 'New Reserve');
     }
 
     public function configureFields(string $pageName): iterable

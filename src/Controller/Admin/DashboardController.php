@@ -64,8 +64,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'home');
-        // Count “new” TelefonBox entries (e.g. statusId = 1)
+        // Counter for new requests (status = ‘Pending’) 
         $newRequestsCount = $this->telefonBoxRepository->count(['status_id' => 1]);
         $label = 'Requests';
         if ($newRequestsCount > 0) {
@@ -74,7 +73,10 @@ class DashboardController extends AbstractDashboardController
                    '</span>';
         }
 
-        // “Reserve” only for ROLE_USER+
+        // Menu items for all Authenticated users
+        yield MenuItem::linkToDashboard('Dashboard', 'home');
+        
+        // Menu items for ROLE_ADMIN
         yield MenuItem::linkToCrud($label, 'bell', TelefonBox::class)
             ->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('User', 'users', User::class)
@@ -84,11 +86,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Status', 'flag', Status::class)
             ->setPermission('ROLE_ADMIN');
         
+         // Menu items for ROLE_USER
+        yield MenuItem::linkToCrud('Reserve', 'calendar-plus', TelefonBox::class)
+            ->setPermission('ROLE_USER')
+            ->setController(ReserveCrudController::class);
 
-         // Restrict 'Reserve' menu explicitly for ROLE_USER only
-        if ($this->isGranted('ROLE_USER') && !$this->isGranted('ROLE_ADMIN')) {
-            yield MenuItem::linkToCrud('Reserve', 'calendar-plus', TelefonBox::class)
-                ->setController(ReserveCrudController::class);
-        }
     }
 }
