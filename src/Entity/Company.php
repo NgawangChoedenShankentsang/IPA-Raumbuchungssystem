@@ -75,4 +75,8 @@ class Company
 
         return $this;
     }
+    public function __toString(): string
+    {
+        return (string) $this->company_name; // or any other property like username
+    }
 }

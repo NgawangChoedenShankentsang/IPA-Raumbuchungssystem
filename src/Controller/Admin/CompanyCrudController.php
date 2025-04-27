@@ -7,6 +7,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 class CompanyCrudController extends AbstractCrudController
 {
@@ -15,14 +19,59 @@ class CompanyCrudController extends AbstractCrudController
         return Company::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            TextField::new('company_name', 'Company Name'),
         ];
     }
-    */
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action->setIcon('plus')->setLabel(false);
+            });
+    }
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof Company) return;
+
+        parent::persistEntity($entityManager, $entityInstance);
+
+        $this->addFlash('success', 'New Company was created successfully!');
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof Company) return;
+
+        parent::updateEntity($entityManager, $entityInstance);
+
+        $this->addFlash('info', 'Company updated successfully!');
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $users = $entityInstance->getUsers();
+        $count = count($users);
+        if (!$entityInstance instanceof Company) return;
+
+        // Check if this company is linked to any users
+        if ($count > 0) {
+            $this->addFlash(
+                'danger',
+                sprintf(
+                    'Cannot delete Company "%s" because it is used by %d user record(s).',
+                    $entityInstance->getCompanyName(),
+                    $count
+                )
+            );
+            return;
+        }
+
+        parent::deleteEntity($entityManager, $entityInstance);
+
+        $this->addFlash('success', 'Company deleted!');
+    }
+    
 }
