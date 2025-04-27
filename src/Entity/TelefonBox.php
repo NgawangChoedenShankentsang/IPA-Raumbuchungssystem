@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\TelefonBoxRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+// edit
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: TelefonBoxRepository::class)]
 class TelefonBox
@@ -94,5 +97,30 @@ class TelefonBox
         $this->status_id = $status_id;
 
         return $this;
+    }
+
+    // edited
+    public function getCompanyName(): ?string
+    {
+        return $this->getUserId()?->getCompanyId()?->getCompanyName();
+    }
+     /**
+     * Optional extra check if you need more complex logic:
+     */
+    #[Assert\Callback]
+    public function validateTimeOrder(ExecutionContextInterface $context): void
+    {
+        if ($this->start_time && $this->end_time && $this->start_time >= $this->end_time) {
+            $context
+                ->buildViolation('Start time must be before end time.')
+                ->atPath('start_time')
+                ->addViolation();
+        }
+    }
+
+    public function __toString(): string
+    {
+        // Make sure this returns something valid—e.g. the title:
+        return (string) $this->title;
     }
 }

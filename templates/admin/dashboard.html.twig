@@ -1,0 +1,60 @@
+{# templates/admin/custom_dashboard.html.twig #}
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+    <style>
+        #calendar {
+            width: 80%;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content_title %}
+    <h1 class="title">TelefonBox Dashboard</h1>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div id="calendar"></div>
+    </div>
+
+    <script>
+    window.onload = () => {
+        const calendarEl = document.querySelector("#calendar");
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            locale: 'en',
+            timeZone: 'Europe/Zurich',
+            headerToolbar: {
+                start: 'prev,next today',
+                center: 'title',
+                end: 'timeGridWeek,timeGridDay,listDay'
+            },
+            views: {
+                timeGridWeek: { buttonText: 'Week' },
+                timeGridDay: { buttonText: 'Day' },
+                listWeek: { buttonText: 'List' }
+            },
+            hiddenDays: [0, 6], // Hide Sunday (0) and Saturday (6)
+            slotMinTime: "08:00:00",
+            slotMaxTime: "17:00:00",
+            events: '{{ path("api_telefonbox_events") }}',
+            editable: true
+        });
+
+        calendar.render();
+    }
+    </script>
+{% endblock %}
+
+{% block configured_javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+{% endblock %}

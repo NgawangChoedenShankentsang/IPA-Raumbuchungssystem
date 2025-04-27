@@ -28,6 +28,7 @@ class CompanyCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('plus')->setLabel(false);
             });

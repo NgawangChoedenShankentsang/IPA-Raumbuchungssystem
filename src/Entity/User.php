@@ -86,8 +86,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // ensure the roles array is non-empty
+        if (empty($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
 
         return array_unique($roles);
     }
@@ -178,5 +180,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
 
         return $this;
+    }
+    public function __toString(): string
+    {
+        return (string) $this->name; // or any other property like username
     }
 }

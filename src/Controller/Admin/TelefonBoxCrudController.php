@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\TelefonBox;
+use App\Entity\Status;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -12,9 +13,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TelefonBoxCrudController extends AbstractCrudController
 {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
     public static function getEntityFqcn(): string
     {
         return TelefonBox::class;
@@ -24,7 +30,9 @@ class TelefonBoxCrudController extends AbstractCrudController
     {
         return [
             TextField::new('title'),
-            AssociationField::new('status_id'),
+            AssociationField::new('status_id', 'Status')
+                ->hideOnForm()
+                ->setTemplatePath('admin/badge.html.twig'),
             AssociationField::new('user_id', 'User')
                 ->hideOnForm(),
             DateTimeField::new('start_time'),
@@ -38,6 +46,7 @@ class TelefonBoxCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('plus')->setLabel(false);
             });
@@ -51,6 +60,10 @@ class TelefonBoxCrudController extends AbstractCrudController
         $telefonBox = new $entityFqcn();
         // set the current user (from the Security token)
         $telefonBox->setUserId($this->getUser());
+
+        // Fetch the Status entity with ID = 1
+        $pendingStatus = $this->entityManager->getRepository(Status::class)->find(1);
+        $telefonBox->setStatusId($pendingStatus);
 
         return $telefonBox;
     }

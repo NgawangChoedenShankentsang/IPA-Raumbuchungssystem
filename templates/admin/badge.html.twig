@@ -1,0 +1,10 @@
+{# templates/admin/badge.html.twig #}
+{% if field.value == 'Pending' %}
+    <span class="badge badge-warning">{{ field.value }}</span>
+{% elseif field.value == 'Approved' %}
+    <span class="badge badge-success">{{ field.value }}</span>
+{% elseif field.value == 'Rejected' %}
+    <span class="badge badge-danger">{{ field.value }}</span>
+{% else %}
+    <span class="badge badge-secondary">{{ field.value }}</span>
+{% endif %}
