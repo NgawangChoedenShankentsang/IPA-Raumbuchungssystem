@@ -12,12 +12,16 @@ class CalendarApiController extends AbstractController
     #[Route('/api/telefonbox-events', name: 'api_telefonbox_events')]
     public function getTelefonBoxEvents(TelefonBoxRepository $repository): JsonResponse
     {
-        $events = [];
+        // fetch only where status_id = 3
+        $boxes = $repository->findBy([
+            'status_id' => 3,
+        ]);
 
-        foreach ($repository->findAll() as $box) {
+        $events = [];
+        foreach ($boxes as $box) {
             $start = $box->getStartTime();
-            $end = $box->getEndTime();
-            $user = $box->getUserId();
+            $end   = $box->getEndTime();
+            $user  = $box->getUserId();
 
             $events[] = [
                 'title' => sprintf(

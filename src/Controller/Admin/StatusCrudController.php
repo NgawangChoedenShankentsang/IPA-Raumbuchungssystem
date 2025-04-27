@@ -54,7 +54,7 @@ class StatusCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $TelefonBox = $entityInstance->getUsers();
+        $TelefonBox = $entityInstance->getTelefonBoxes();
         $count = count($TelefonBox);
         if (!$entityInstance instanceof Status) return;
 

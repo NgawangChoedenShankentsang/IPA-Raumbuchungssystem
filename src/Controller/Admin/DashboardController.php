@@ -6,6 +6,7 @@ use App\Entity\Company;
 use App\Entity\TelefonBox;
 use App\Entity\User;
 use App\Entity\Status;
+use App\Repository\TelefonBoxRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -17,6 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 #[AdminDashboard(routePath: '/', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
+    private TelefonBoxRepository $telefonBoxRepository;
+
+    public function __construct(TelefonBoxRepository $telefonBoxRepository)
+    {
+        $this->telefonBoxRepository = $telefonBoxRepository;
+    }
+
     public function index(): Response
     {
         // return parent::index();
@@ -57,11 +65,30 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'home');
-        yield MenuItem::linkToCrud('Reserve', 'calendar-plus',TelefonBox::class);
-        yield MenuItem::linkToCrud('User', 'users', User::class);
-        yield MenuItem::linkToCrud('Company', 'buildings', Company::class);
-        yield MenuItem::linkToCrud('Status', 'flag', Status::class);
+        // Count “new” TelefonBox entries (e.g. statusId = 1)
+        $newRequestsCount = $this->telefonBoxRepository->count(['status_id' => 1]);
+        $label = 'Requests';
+        if ($newRequestsCount > 0) {
+            $label .= ' <span class="badge badge-pill badge-danger">'
+                   . $newRequestsCount .
+                   '</span>';
+        }
+
+        // “Reserve” only for ROLE_USER+
+        yield MenuItem::linkToCrud($label, 'bell', TelefonBox::class)
+            ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('User', 'users', User::class)
+            ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Company', 'buildings', Company::class)
+            ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Status', 'flag', Status::class)
+            ->setPermission('ROLE_ADMIN');
         
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+
+         // Restrict 'Reserve' menu explicitly for ROLE_USER only
+        if ($this->isGranted('ROLE_USER') && !$this->isGranted('ROLE_ADMIN')) {
+            yield MenuItem::linkToCrud('Reserve', 'calendar-plus', TelefonBox::class)
+                ->setController(ReserveCrudController::class);
+        }
     }
 }

@@ -33,6 +33,11 @@ security:
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/user, roles: ROLE_ADMIN }
+        - { path: ^/company, roles: ROLE_ADMIN }
+        - { path: ^/requests, roles: ROLE_ADMIN }
+        - { path: ^/status, roles: ROLE_ADMIN }
+        - { path: ^/reserve, roles: ROLE_USER }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
