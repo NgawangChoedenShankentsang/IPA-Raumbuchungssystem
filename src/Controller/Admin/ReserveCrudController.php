@@ -62,6 +62,23 @@ class ReserveCrudController extends AbstractCrudController
                 return $action->setIcon('plus')->setLabel(false);
             });
     }
+
+
+    private function isOverlapping(TelefonBox $telefonBox): bool
+    {
+        $repository = $this->entityManager->getRepository(TelefonBox::class);
+
+        $qb = $repository->createQueryBuilder('t');
+        $qb->where('t.start_time < :endTime')
+            ->andWhere('t.end_time > :startTime')
+            ->andWhere('t.id != :currentId')
+            ->setParameter('startTime', $telefonBox->getStartTime())
+            ->setParameter('endTime', $telefonBox->getEndTime())
+            ->setParameter('currentId', $telefonBox->getId() ?? 0);
+
+        return (bool) $qb->getQuery()->getOneOrNullResult();
+    }
+
     /**
      * Called when EasyAdmin creates a new entity instance.
      */
@@ -84,6 +101,11 @@ class ReserveCrudController extends AbstractCrudController
         if (!$entityInstance instanceof TelefonBox) {
             return;
         }
+        if ($this->isOverlapping($entityInstance)) {
+            $this->addFlash('danger', '<i class="fa-solid fa-triangle-exclamation text-danger"></i> 
+                The selected time overlaps with an existing reservation.');
+            return;
+        }
 
         $entityManager->persist($entityInstance);
         $entityManager->flush();
@@ -100,6 +122,12 @@ class ReserveCrudController extends AbstractCrudController
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if (!$entityInstance instanceof TelefonBox) return;
+        
+        if ($this->isOverlapping($entityInstance)) {
+            $this->addFlash('danger', '<i class="fa-solid fa-triangle-exclamation text-danger"></i> 
+                The selected time overlaps with an existing reservation.');
+            return;
+        }
 
         parent::updateEntity($entityManager, $entityInstance);
 

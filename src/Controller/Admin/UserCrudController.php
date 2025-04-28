@@ -22,6 +22,7 @@ class UserCrudController extends AbstractCrudController
     private UserPasswordHasherInterface $passwordHasher;
     
 
+
     public function __construct(UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager)
     {
         $this->passwordHasher = $passwordHasher;
