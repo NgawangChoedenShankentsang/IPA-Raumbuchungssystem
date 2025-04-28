@@ -96,24 +96,14 @@ class TelefonBoxCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
             ->remove(Crud::PAGE_INDEX, Action::NEW);
     }
-
-    public function createEntity(string $entityFqcn)
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $telefonBox = parent::createEntity($entityFqcn);
-        $telefonBox->setUserId($this->getUser());
-        $pending = $this->entityManager->getRepository(Status::class)->find(1);
-        $telefonBox->setStatusId($pending);
-        return $telefonBox;
+        if (!$entityInstance instanceof TelefonBox) return;
+
+        parent::updateEntity($entityManager, $entityInstance);
+
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> Request updated successfully!');
     }
 
-    public function persistEntity(EntityManagerInterface $em, $entity): void
-    {
-        if (!$entity instanceof TelefonBox) {
-            return;
-        }
-        $em->persist($entity);
-        $em->flush();
-        $this->notificationService->notifyAdmins($entity);
-    }
 }
 

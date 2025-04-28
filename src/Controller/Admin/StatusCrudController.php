@@ -40,7 +40,7 @@ class StatusCrudController extends AbstractCrudController
 
         parent::persistEntity($entityManager, $entityInstance);
 
-        $this->addFlash('success', 'New status was created successfully!');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> New status was created successfully!');
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -49,7 +49,7 @@ class StatusCrudController extends AbstractCrudController
 
         parent::updateEntity($entityManager, $entityInstance);
 
-        $this->addFlash('info', 'Status updated successfully!');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> Status updated successfully!');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -63,7 +63,8 @@ class StatusCrudController extends AbstractCrudController
             $this->addFlash(
                 'danger',
                 sprintf(
-                    'Cannot delete Status "%s" because it is used by %d Reserve record(s).',
+                    '<i class="fa-solid fa-circle-exclamation text-danger"></i>
+                    Cannot delete Status "%s" because it is used by %d Reserve record(s).',
                     $entityInstance->getName(),
                     $count
                 )
@@ -73,7 +74,7 @@ class StatusCrudController extends AbstractCrudController
 
         parent::deleteEntity($entityManager, $entityInstance);
 
-        $this->addFlash('success', 'Status deleted!');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> Status deleted!');
     }
     
 }

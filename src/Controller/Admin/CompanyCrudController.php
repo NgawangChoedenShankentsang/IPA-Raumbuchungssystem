@@ -39,7 +39,7 @@ class CompanyCrudController extends AbstractCrudController
 
         parent::persistEntity($entityManager, $entityInstance);
 
-        $this->addFlash('success', 'New Company was created successfully!');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> New Company was created successfully!');
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -48,7 +48,7 @@ class CompanyCrudController extends AbstractCrudController
 
         parent::updateEntity($entityManager, $entityInstance);
 
-        $this->addFlash('info', 'Company updated successfully!');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> Company updated successfully!');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -62,7 +62,8 @@ class CompanyCrudController extends AbstractCrudController
             $this->addFlash(
                 'danger',
                 sprintf(
-                    'Cannot delete Company "%s" because it is used by %d user record(s).',
+                    '<i class="fa-solid fa-circle-exclamation text-danger"></i>
+                    Cannot delete Company "%s" because it is used by %d user record(s).',
                     $entityInstance->getCompanyName(),
                     $count
                 )
@@ -72,7 +73,7 @@ class CompanyCrudController extends AbstractCrudController
 
         parent::deleteEntity($entityManager, $entityInstance);
 
-        $this->addFlash('success', 'Company deleted!');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> Company deleted!');
     }
     
 }

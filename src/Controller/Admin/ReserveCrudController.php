@@ -89,6 +89,37 @@ class ReserveCrudController extends AbstractCrudController
         $entityManager->flush();
 
         $this->notificationService->notifyAdmins($entityInstance);
+
+        // flash on create
+        $this->addFlash(
+            'success',
+            '<i class="fa-solid fa-circle-check text-success"></i> 
+             Reserve created successfully!'
+        );
+    }
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof TelefonBox) return;
+
+        parent::updateEntity($entityManager, $entityInstance);
+
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> Reserve updated successfully!');
+    }
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof TelefonBox) {
+            return;
+        }
+
+        // remove + flush
+        $entityManager->remove($entityInstance);
+        $entityManager->flush();
+
+        // flash on delete
+        $this->addFlash(
+            'success',
+            '<i class="fa-solid fa-circle-check text-success"></i> Reserve deleted successfully!'
+        );
     }
 
 

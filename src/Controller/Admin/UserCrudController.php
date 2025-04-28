@@ -79,7 +79,7 @@ class UserCrudController extends AbstractCrudController
             
             if ($existingUser) {
                 // Add flash message
-                $this->addFlash('danger', '<i class="ti ti-alert-circle"></i> The email is already in use.');
+                $this->addFlash('danger', '<i class="fa-solid fa-circle-exclamation text-danger"></i> The email is already in use.');
                 return; // Exit without persisting
             }
             
@@ -89,7 +89,7 @@ class UserCrudController extends AbstractCrudController
                 );
             }
         }
-        $this->addFlash('success', '<i class="fa-solid fa-circle-check"></i> The user is created successfully.');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> The user is created successfully.');
         parent::persistEntity($entityManager, $entityInstance);
     }
 
@@ -101,7 +101,7 @@ class UserCrudController extends AbstractCrudController
             
             if ($existingUser && $existingUser->getId() !== $entityInstance->getId()) {
                 // Add flash message
-                $this->addFlash('danger', '<i class="fa-solid fa-circle-exclamation"></i></i> The email is already in use.');
+                $this->addFlash('danger', '<i class="fa-solid fa-circle-exclamation text-danger"></i> The email is already in use.');
                 return; // Exit without updating
             }
             
@@ -111,8 +111,31 @@ class UserCrudController extends AbstractCrudController
                 );
             }
         }
-        $this->addFlash('success', '<i class="fa-solid fa-circle-check"></i> The user is updated successfully.');
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> The user is updated successfully.');
         parent::updateEntity($entityManager, $entityInstance);
+    }
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $TelefonBox = $entityInstance->getTelefonBoxes();
+        $count = count($TelefonBox);
+        if (!$entityInstance instanceof User) return;
+
+        if ($count > 0) {
+            $this->addFlash(
+                'danger',
+                sprintf(
+                    '<i class="fa-solid fa-circle-exclamation text-danger"></i>
+                    Cannot delete User "%s" because it is used by %d Reserve record(s).',
+                    $entityInstance->getName(),
+                    $count
+                )
+            );
+            return;
+        }
+
+        parent::deleteEntity($entityManager, $entityInstance);
+
+        $this->addFlash('success', '<i class="fa-solid fa-circle-check text-success"></i> User deleted!');
     }
 
 }
