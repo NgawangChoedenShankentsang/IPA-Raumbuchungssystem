@@ -47,8 +47,10 @@ class ReserveCrudController extends AbstractCrudController
                 ->setTemplatePath('admin/badge.html.twig'),
             AssociationField::new('user_id', 'User')
                 ->hideOnForm(),
-            DateTimeField::new('start_time'),
-            DateTimeField::new('end_time'),
+            DateTimeField::new('start_time')
+                ->setColumns('col-sm-6 col-lg-5 col-xxl-3'),
+            DateTimeField::new('end_time')
+                ->setColumns('col-sm-6 col-lg-5 col-xxl-3'),
             TextField::new('companyName', 'Company')
                 ->onlyOnIndex()
         ];
