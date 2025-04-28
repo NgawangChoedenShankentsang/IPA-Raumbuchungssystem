@@ -1,0 +1,92 @@
+/* public/css/admin.css */
+/* Override the default Bootstrap variables */
+:root {
+    --sidebar-bg: #D4A6FF;
+    --sidebar-menu-color: #242428;
+    --sidebar-menu-icon-color: #242428;
+    --sidebar-menu-header-color: #242428;
+    --sidebar-menu-active-item-bg: rgba(139, 139, 139, 0.5);
+    --sidebar-menu-active-item-color: #242428;
+    --sidebar-border-color: #FFC8C8;
+    --button-primary-bg: #000000;
+    --form-switch-checked-bg: #A8D45A;
+    --button-primary-color: #ffffff;
+    --sidebar-menu-header-color: #0000008f;
+    --pagination-active-bg: #A8D45A;
+    --pagination-active-color: #242428;
+    --badge-boolean-true-bg: #A8D45A;
+    --dropdown-color: #000000 !important;
+    --fc-event-bg-color: #D4A6FF;
+    --fc-event-border-color: #D4A6FF;
+    --fc-event-text-color: #000000;
+}
+
+@font-face {
+    font-family: 'TT Interfaces';
+    src: url('/fonts/TTInterfaces-Light.woff2') format('woff2');
+}
+body {
+    font-family: 'TT Interfaces', sans-serif;
+}
+
+
+/* Stackoverflow  */
+.ea-index section.main-content {
+    overflow: hidden;
+    position: relative;
+}
+
+.ea-index article.content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ea-index #main {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* calender.js custom css */
+.fc-timeGridWeek-button {
+    background-color: #E7CDFF !important;
+    border-color: #E7CDFF !important;
+    color: #000000 !important;
+}
+.fc-timeGridDay-button {
+    background-color: #D2A1FD !important;
+    border-color: #D2A1FD !important;
+    color: #000000 !important;
+}
+.fc-listDay-button {
+    background-color: #c889fe !important;
+    border-color: #c889fe !important;
+    color: #000000 !important;
+}
+.fc-today-button {
+    background-color: #D5A8FF !important;
+    border-color: #D5A8FF !important;
+    color: #000000 !important;
+}
+.fc-next-button {
+    background-color: #D7AEFD !important;
+    border-color: #D7AEFD !important;
+    color: #000000 !important;
+}
+.fc-prev-button {
+    background-color: #E7CDFF !important;
+    border-color: #E7CDFF !important;
+    color: #000000 !important;
+}
+
+.fc-col-header-cell-cushion {
+    color: #000000 !important;
+}
+
+.fc-daygrid-day-number {
+    color: #000000 !important;
+}
+
+#fc-dom-1 {
+    font-weight: 900 !important;
+}

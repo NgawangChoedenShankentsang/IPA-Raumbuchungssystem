@@ -53,7 +53,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Assets::new()
             ->useCustomIconSet('tabler')
-        ;
+            ->addCssFile('css/admin.css');
     }
 
     public function configureDashboard(): Dashboard
